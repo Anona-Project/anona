@@ -1,0 +1,4 @@
+# ignoring the diferent libs and ide directorys
+.idea
+node_modules
+public/libs
