@@ -5,25 +5,35 @@ var keys = require('./bank');
 var bignum = require('bignum');
 var coinkeys = require('./coins');
 
-var rsa = function () {};
+var rsa ={
 
-//-------------- BANK rsa functions -------------------//
-rsa.publicKey.bank.prototype = {
-    encrypt: function(m) {
-        return m.powm(this.e, this.n);
+    publicKeybank: function() {
+        return {cert: 'Anona-Bank ROOT Test X.509 Certificate',e:keys.publicKey.e,n:keys.publicKey.n};
+
     },
-    verify: function(c) {
-        return c.powm(this.e, this.n);
+    privateKeybank: function() {
+
+    },
+    publicKeycoins: function() {
+        return {cert: 'Anona-Bank 1Coin Test X.509 Certificate',e:coinkeys.publicKey.e,n:coinkeys.publicKey.n};
+    },
+    privateKeycoins: function() {
+
     }
+
 };
 
-rsa.privateKey.bank.prototype = {
+//-------------- BANK rsa functions -------------------//
+rsa.publicKeybank.prototype = {
     encrypt: function(m) {
         return m.powm(keys.publicKey.e, keys.publicKey.n);
     },
     verify: function(c) {
         return c.powm(keys.publicKey.e, keys.publicKey.n);
-    },
+    }
+};
+
+rsa.privateKeybank.prototype = {
     sign: function(m) {
         return m.powm(keys.privateKey.d, keys.publicKey.n);
     },
@@ -33,22 +43,16 @@ rsa.privateKey.bank.prototype = {
 };
 
 //--- Coin rsa functions -------------//
-rsa.publicKey.coins.prototype = {
-    encrypt: function(m) {
-        return m.powm(this.e, this.n);
-    },
-    verify: function(c) {
-        return c.powm(this.e, this.n);
-    }
-};
-
-rsa.privateKey.coins.prototype = {
+rsa.publicKeycoins.prototype = {
     encrypt: function(m) {
         return m.powm(coinkeys.publicKey.e, coinkeys.publicKey.n);
     },
     verify: function(c) {
         return c.powm(coinkeys.publicKey.e, coinkeys.publicKey.n);
-    },
+    }
+};
+
+rsa.privateKeycoins.prototype = {
     sign: function(m) {
         return m.powm(coinkeys.privateKey.d, coinkeys.publicKey.n);
     },
