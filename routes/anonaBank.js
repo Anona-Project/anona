@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var rsa = require('./keys/rsa');
 var bignum = require('bignum');
+var uuidV4 = require('uuid/v4');
 var CryptoJS = require('crypto-js');
 
 
@@ -21,7 +22,19 @@ router.get('/e-coincertificate', function(req, res, next) {
 });
 
 //Se llama desde terminal para emitir moneda. Probablmente se reciba el amount y se autentique a la terminal (sino podria emitir moenda la vecina del quinto). Seguidamente se devuelve un json con todas las monedas
-router.get('/issue', function(req, res, next) {
+router.post('/issue/', function(req, res, next) {
+
+    /*var ecoins={};
+
+    for(i=0;i<req.amount;i++){
+        var coin
+        var id = uuidV4();
+        console.log(id);
+
+    }
+
+    res.send({Ecoins:ecoins});*/
+
 
 });
 

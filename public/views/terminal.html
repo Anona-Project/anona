@@ -1,4 +1,5 @@
 <div ng-controller="terminalctrl">
+    <h2>ANONA Terminal</h2>
     <form>
         <div class="form-group">
             <label for="money">Money:</label>
@@ -6,4 +7,12 @@
         </div>
         <button type="submit" class="btn btn-default">Get Coins</button>
     </form>
+    <button ng-click="generateUUID()" type="submit" class="btn btn-default">NEW UUID</button>
+    <p>UUID: {{uuid}}</p>
+    <p>GUID: {{guid}}</p>
+    
+    
+    <div class="text-center">
+        <img  src="../img/anona.png">
+    </div>
 </div>
