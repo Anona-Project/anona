@@ -18,6 +18,7 @@ var rsa ={
         return {cert: 'Anona-Bank 1Coin Test X.509 Certificate',e:coinkeys.publicKey.e,n:coinkeys.publicKey.n};
     },
     privateKeycoins: function() {
+        return coinkeys.privateKey.d;
 
     }
 
@@ -53,6 +54,7 @@ rsa.publicKeycoins.prototype = {
 };
 
 rsa.privateKeycoins.prototype = {
+
     sign: function(m) {
         return m.powm(coinkeys.privateKey.d, coinkeys.publicKey.n);
     },

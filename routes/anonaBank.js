@@ -21,19 +21,33 @@ router.get('/e-coincertificate', function(req, res, next) {
     res.send({EcoinPublicKey:publicKey});
 });
 
-//Se llama desde terminal para emitir moneda. Probablmente se reciba el amount y se autentique a la terminal (sino podria emitir moenda la vecina del quinto). Seguidamente se devuelve un json con todas las monedas
-router.post('/issue/', function(req, res, next) {
+function signPrivateKey (data,d,n){
+    return data.powm(d,n);
+}
 
-    /*var ecoins={};
+//Se llama desde terminal para emitir moneda
+router.post('/issue', function(req, res, next) {
 
-    for(i=0;i<req.amount;i++){
-        var coin
-        var id = uuidV4();
-        console.log(id);
+    console.log(JSON.stringify(req.body));
+    var info = req.body;
+    var issuedCoins = [];
+    for(var coin in info){
+        if (info.hasOwnProperty(coin)) {
+            console.log(info[coin]["BlindCoinID"]);
+            var id = info[coin]["BlindCoinID"];
+            var idBIG = bignum(id,16);
+            console.log('ID BIG: '+idBIG);
 
+            //REVISAR
+
+            var publicK = rsa.publicKeycoins();
+            var n = publicK.n;
+            var idSigned = signPrivateKey(idBIG,rsa.privateKeycoins(),n);
+            issuedCoins.push({signed: idSigned.toString(16), amount: 1});
+
+        }
     }
-
-    res.send({Ecoins:ecoins});*/
+    res.send({Ecoins:issuedCoins});
 
 
 });
