@@ -10,10 +10,6 @@ MainCtrl.config(['$routeProvider', function($routeProvider){
             templateUrl: './views/terminal.html',
             controller: 'terminalctrl'
         })
-        .when('/panel', {
-            templateUrl: './views/panel.html',
-            controller: 'panelctrl'
-        })
         .otherwise({
             redirectTo: '/index'
         });
