@@ -39,8 +39,9 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
     //-----------------------------
 
 
+
     $scope.issueAmount = function(){
-        $http.get('http://localhost:3000/anonabank/e-coincertificate').success(function(response){
+        $http.get('/anonabank/e-coincertificate').success(function(response){
 
             var n = response.EcoinPublicKey.n;
             console.log(n);
@@ -58,9 +59,10 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
                 var blindMessage = blindMsg(UUIDBIG,rand,e,n);
                 $scope.ecoins.push({BlindCoinID:blindMessage.toString(16)});
             }
-            //$scope.ecoins.push({amount:$scope.amount});
 
-            $http.post('http://localhost:3000/anonabank/issue',$scope.ecoins).success(function(response){
+
+            $http.post('/anonabank/issue', $scope.ecoins)
+                .success(function(response){
                 var ecoins = [];
                 var info = response.Ecoins;
                 for(var signedID in info){
@@ -76,15 +78,7 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
                     }
                 }
                 console.log(ecoins);
-
-
             });
-
-
-
         });
-
-
-
     };
 }]);
