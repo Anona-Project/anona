@@ -29,14 +29,14 @@ router.post('/login', function(req, res) {
     if(err) throw err;
     if(!user){
       console.log('No encontrado');
-      res.send('user not found');
+      res.status(400).send('user not found');
     }
     User.comparePassword(password, user.password, function(err, isMatch){
       if(err) throw err;
       if(isMatch){
         res.send(user._id);
       } else {
-        res.send('invalid camps');
+        res.status(400).send('invalid camps');
       }
     });
   });
