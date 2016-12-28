@@ -21,6 +21,7 @@
     "angular-route": "1.5.9",
     "angular-bootstrap": "^2.2.0",
     "angular.uuid2": "angular-uuid2#*",
-    "big-integer": "^1.6.17"
+    "big-integer": "^1.6.17",
+    "angular-qrcode": "monospaced/angular-qrcode#^6.2.1"
   }
 }

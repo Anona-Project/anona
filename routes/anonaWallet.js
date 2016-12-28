@@ -3,13 +3,32 @@
  */
 var express = require('express');
 var router = express.Router();
+var User = require('../models/modeluser');
+var Temporary = require('../models/modeltemporary')
 
 
-/* POST encrypted money to a user. */
-router.post('/', function(req, res, next) {
-    //funcion que guarda el dinero en la cuenta de x persona después de haber introducido el pin en la oficina.
+/* POST money to a temporary state. */
+router.post('/temporary', function(req, res) {
+    console.log(req.body.ecoins);
+    Temporary.create({
+        id:req.body.id,
+        ecoins: req.body.ecoins
+    }, function(err) {
+        if (err)
+            res.send(err);
+    });
 
-    res.send('respond with a resource');
+    res.send(req.body.id);
+});
+
+router.get('/temporary/:id', function(req, res) {
+    console.log(req.params.id);
+    Temporary.find({id : req.params.id}, function(err, tempo){
+        if(err)
+            res.send(err)
+        res.send(tempo);
+    });
+
 });
 
 

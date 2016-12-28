@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 
 
 var bank = require('./routes/anonaBank');
+var wallet = require('./routes/anonaWallet');
 var users = require('./routes/anonaUsers');
 
 var app = express();

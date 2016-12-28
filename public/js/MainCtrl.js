@@ -1,7 +1,7 @@
 /**
  * Created by tonim on 05/12/2016.
  */
-var MainCtrl = angular.module('MainCtrl', ['ngRoute','ui.bootstrap','angularUUID2']);
+var MainCtrl = angular.module('MainCtrl', ['ngRoute','ui.bootstrap','angularUUID2', 'monospaced.qrcode']);
 
 MainCtrl.config(['$routeProvider', function($routeProvider){
 

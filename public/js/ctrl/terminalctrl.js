@@ -36,7 +36,10 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
     function blindMsg (id,random,e,n){
         return  (id.multiply(random.modPow(e,n))).mod(n);
     }
-    //-----------------------------
+    //Initial Value -------------------------
+
+    $scope.qrid = [];
+    $scope.qractive = false;
 
 
 
@@ -78,6 +81,20 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
                     }
                 }
                 console.log(ecoins);
+                var UUID_Temporary =  uuid2.newuuid();
+                console.log("ID Temporary: "+ UUID_Temporary);
+
+                var tempo = {};
+                tempo.id = UUID_Temporary;
+                tempo.ecoins = ecoins;
+
+                $http.post('/anonawallet/temporary', tempo)
+                    .success(function (response) {
+                        $scope.qrid = response;
+                        $scope.qractive = true;
+                        console.log($scope.qrid);
+                    })
+
             });
         });
     };

@@ -14,8 +14,10 @@ var UserSchema = mongoose.Schema({
     password: {
         type: String
     },
-    coins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Coins' }]
-
+    coins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Coins' }],
+    kcoin: {
+        type: String
+    }
 });
 
 var User = module.exports = mongoose.model('User', UserSchema);

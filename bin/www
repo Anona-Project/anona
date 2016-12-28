@@ -14,33 +14,43 @@ var https = require('https');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
-/**
- *
- */
-var server = https.createServer({
-        key: fs.readFileSync('./certs/anonabank.key'),
-        cert: fs.readFileSync('./certs/anonabank.crt')
-    },
-    app);
+
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
-console.log("Server Running in port:" + port);
+console.log("Server running on port 3000");
 
-// Redirect from http port 80 to https
-http.createServer(function (req, res) {
+
+
+/**
+ *  HTTPS
+ *  var server = https.createServer({
+        key: fs.readFileSync('./certs/anonabank.key'),
+        cert: fs.readFileSync('./certs/anonabank.crt')
+    },
+ app);
+
+ server.listen(port);
+ console.log("Server Running in port:" + port);
+
+ // Redirect from http port 80 to https
+ http.createServer(function (req, res) {
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
 }).listen(80);
+ **/
+
+
 /**
  * Normalize a port into a number, string, or false.
  */
