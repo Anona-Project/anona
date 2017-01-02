@@ -5,8 +5,8 @@ var mongoose = require('mongoose');
 
 
 var coins = new mongoose.Schema({
+    id: String,
     idsigned: String,
-    idoriginal: String,
     amount: String,
     issuer: String,
     issuedate: String,
@@ -15,4 +15,8 @@ var coins = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('Coins', coins);
+var Coins = module.exports = mongoose.model('Coins', coins);
+
+module.exports.createCoin = function(newCoin, callback){
+            newCoin.save(callback);
+}

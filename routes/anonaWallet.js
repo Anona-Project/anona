@@ -3,8 +3,8 @@
  */
 var express = require('express');
 var router = express.Router();
+var Temporary = require('../models/modeltemporary');
 var User = require('../models/modeluser');
-var Temporary = require('../models/modeltemporary')
 
 
 /* POST money to a temporary state. */
@@ -26,9 +26,21 @@ router.get('/temporary/:id', function(req, res) {
     Temporary.find({id : req.params.id}, function(err, tempo){
         if(err)
             res.send(err)
+        Temporary.remove({ id: req.params.id }, function(err) {
+        });
         res.send(tempo);
     });
+});
 
+//El ID de referencia al pack de monedas temporales, no el _id de Mongoose
+router.delete('/temporary/:id', function(req, res) {
+    console.log(req.params.id);
+    Temporary.remove({
+        id : req.params.id
+    }, function(err, sub) {
+        if (err)
+            res.send(err);
+    });
 });
 
 
@@ -39,7 +51,23 @@ router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
 
+/* POST coin to wallet. */
+router.post('/coin/', function(req, res) {
+    console.log("Coin id:" +req.body.coinid);
+    console.log("User id:" + req.body.userid);
 
+        var query = {_id : req.body.userid};
+        var update = {$push : {"coins" : req.body.coinid}};
+        var options = {};
+
+        User.findOneAndUpdate(query, update, options, function(err, user) {
+            if (err) {
+                res.send(err);
+            }
+            res.send(user);
+        });
+
+});
 
 
 module.exports = router;

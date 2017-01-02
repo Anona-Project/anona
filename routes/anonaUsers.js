@@ -38,17 +38,19 @@ router.post('/signup', function(req, res) {
      * @type {*}
      */
 
-  //Ciframos la kcoin con el password
-    var encrypted = CryptoJS.AES.encrypt(kcoin, req.body.password);
+    //Ciframos con el PIN del usuario
+
+    var encrypted = CryptoJS.AES.encrypt(kcoin, req.body.pin);
     var e1 = encrypted.toString();
     console.log("E1 to String (Base64): " + e1);
 
-  //Ciframos con el PIN del usuario
-  //Aplicamos el mismo proceso anterior otra vez
+    //Ciframos la kcoin con el password
+    //Aplicamos el mismo proceso anterior otra vez
 
-    var encrypted2 = CryptoJS.AES.encrypt(e1, req.body.pin);
+    var encrypted2 = CryptoJS.AES.encrypt(kcoin, req.body.password);
     var e2 = encrypted2.toString();
     console.log("E2 to String (Base64): " + e2);
+
 
     //Creamos la información en el modelo user
     var newUser = new User({

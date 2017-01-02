@@ -14,7 +14,7 @@ var UserSchema = mongoose.Schema({
     password: {
         type: String
     },
-    coins: [{type: mongoose.Schema.Types.ObjectId, ref: 'Coins' }],
+    coins: [{}],
     kcoin: {
         type: String
     }
