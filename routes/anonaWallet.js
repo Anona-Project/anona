@@ -41,6 +41,7 @@ router.delete('/temporary/:id', function(req, res) {
         if (err)
             res.send(err);
     });
+    res.sendStatus(200);
 });
 
 

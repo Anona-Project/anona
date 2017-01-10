@@ -1,7 +1,9 @@
 /**
  * Created by tonim on 05/12/2016.
  */
-angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$rootScope','$http','$routeParams','uuid2', function($scope, $location, $rootScope, $http, $routeParams,uuid2){
+angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$rootScope',
+    '$http','$routeParams','uuid2','$timeout', function($scope, $location, $rootScope, $http,
+                                                        $routeParams,uuid2, $timeout){
 
     //Data treatment FUNCTIONS
     function convertToHex(str) {
@@ -43,7 +45,7 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
 
 
 
-    $scope.issueAmount = function(){
+        $scope.issueAmount = function(){
         $http.get('/anonabank/e-coincertificate').success(function(response){
 
             var n = response.EcoinPublicKey.n;
@@ -92,9 +94,15 @@ angular.module('MainCtrl').controller('terminalctrl',['$scope','$location','$roo
                     .success(function (response) {
                         $scope.qrid = response;
                         $scope.qractive = true;
-                        console.log($scope.qrid);
-                    })
+                        $timeout(function(){
+                            $scope.qractive = false;
 
+                            $http.delete('/anonawallet/temporary/'+ tempo.id)
+                                .success(function (response) {
+                                });
+                        }, 20000);
+                        console.log($scope.qrid);
+                    });
             });
         });
     };
