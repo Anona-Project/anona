@@ -60,25 +60,6 @@ router.get('/makepayment', function(req, res, next) {
 
 });
 
-/* POST a Coin to Database */
-router.post('/coin/', function(req, res) {
-    console.log(req.body.coin);
-    var newCoin = Coins({
-        id: req.body.ID,
-        idsigned: req.body.ID_signed,
-        amount: req.body.amount,
-        issuer: req.body.issuer,
-        issuedate: req.body.issue_date,
-        urlcheck: req.body.URLcheck,
-        urlcert: req.body.URLcert
-    });
-
-    Coins.createCoin(newCoin, function(err, coin){
-        if(err) throw err;
-        res.send(coin);
-    });
-});
-
 
 
 
