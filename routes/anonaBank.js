@@ -79,6 +79,8 @@ router.post('/coin/', function(req, res) {
     });
 });
 
+/* POST a Coin to Database */
+
 
 
 
