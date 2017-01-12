@@ -41,6 +41,7 @@ router.delete('/temporary/:id', function(req, res) {
         if (err)
             res.send(err);
     });
+    res.sendStatus(200);
 });
 
 
@@ -53,11 +54,11 @@ router.get('/', function(req, res, next) {
 
 /* POST coin to wallet. */
 router.post('/coin/', function(req, res) {
-    console.log("Coin id:" +req.body.coinid);
+    console.log("Coin String:" +req.body.string);
     console.log("User id:" + req.body.userid);
 
         var query = {_id : req.body.userid};
-        var update = {$push : {"coins" : req.body.coinid}};
+        var update = {$push : {"coins" : req.body.string}};
         var options = {};
 
         User.findOneAndUpdate(query, update, options, function(err, user) {
