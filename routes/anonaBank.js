@@ -79,8 +79,77 @@ router.post('/coin/', function(req, res) {
     });
 });
 
-/* POST a Coin to Database */
+/*Checking the coins in the blacklist and payment*/
+router.post('/pay', function(req, res) {
+    //Geting de request data
+    var coins = req.body.coins;
+    var product = req.body.product;
+    var office = req.body.office;
+    var price = req.body.price;
+    var store = req.body.store;
 
+    console.log(coins);
+    console.log(product);
+    console.log(office);
+    console.log(price);
+
+    //Cheking the validation of the coins
+    for (var i = 0; i < coins.length; i++){
+        var e = 0;
+        var invalidcoinfound = false;
+        console.log('estoy dentro del for');
+        var coin = coins[i];
+        console.log('moneda: ',coin);
+        var signedId = coin.ID_signed;
+        console.log('ID firmado: ',signedId);
+        //Aqui debemos mirar si el signed id es correcto
+
+
+
+        //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
+        var query = {idsigned: signedId};
+        Coins.findOne(query, function (err, foundcoin) {
+            if(foundcoin){
+                i = -1;
+                res.status(400).send('Invalid coins found');
+            }
+            else{
+                console.log('coinsarevalid');
+            }
+        });
+        if (i = -1){
+            break;
+        }
+    }
+    //We add the coins to the blacklist if this are valid
+    if (i = price-1) {
+        console.log('i value:', i);
+        for (var a = 0; coins.length; a++) {
+            var addcoin = coins[i];
+            console.log('coin toadd', addcoin);
+            Coins.create({
+                id: addcoin.ID,
+                idsigned: addcoin.ID_signed,
+                amount: addcoin.amount,
+                issuer: addcoin.issuer,
+                issuedate: addcoin.issue_date,
+                urlcheck: addcoin.URLcheck,
+                urlcert: addcoin.URLcert
+            },function (err, coin) {
+                if(coin){
+                    console.log('coin added to the list');
+                }else{
+                    console.log("Error adding")
+                }
+            });
+        }
+    }
+    else{
+        res.status(400).send('Invalid coins found');
+    }
+
+    res.send('success');
+});
 
 
 

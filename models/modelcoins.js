@@ -17,6 +17,6 @@ var coins = new mongoose.Schema({
 
 var Coins = module.exports = mongoose.model('Coins', coins);
 
-module.exports.createCoin = function(newCoin, callback){
-            newCoin.save(callback);
+module.exports.createCoin = function(blackCoin, callback){
+            blackCoin.save(callback);
 }
