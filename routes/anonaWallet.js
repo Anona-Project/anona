@@ -103,12 +103,42 @@ router.post('/checkmoney', function(req, res) {
         }
 
     });
-    /* Get coins*/
-    /* GET encrypted coins from a user. */
-    router.get('/coins/:', function(req, res, next) {
+});
 
+/* POST a transaction to wallet and delete coins */
+router.post('/addtransaction/:id', function(req, res) {
+    console.log("transaction", req.body);
+    console.log("User id:", req.params.id);
 
-        res.send('respond with a resource');
+    var query = {_id : req.params.id};
+    var update = {$push : {"transactions": req.body}};
+    var options = {};
+
+    User.findOneAndUpdate(query, update, options, function(err, user) {
+        if (err) {
+            console.log('err', err);
+            res.send(err);
+        }
+        if (user){
+
+            var deletecoins = user.coins.slice(0, req.body.price);
+            console.log('deletecoins', deletecoins);
+            var query = {_id : user.id};
+            console.log('query', query);
+            var update = {$pull : {"coins": { $in: deletecoins }}};
+            var options = {};
+
+            User.findOneAndUpdate(query, update, options, function(err, user) {
+                if (err) {
+                    console.log('err', err);
+                    res.send(err);
+                }
+                if (user){
+                    console.log('user deleting coins', user);
+                    res .send(user);
+                }
+            });
+        }
     });
 });
 

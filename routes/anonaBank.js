@@ -5,6 +5,7 @@ var bignum = require('bignum');
 var uuidV4 = require('uuid/v4');
 var CryptoJS = require('crypto-js');
 var Coins = require('../models/modelcoins');
+var request = require('request');
 
 
 router.get('/bankcertificate', function(req, res, next) {
@@ -87,68 +88,92 @@ router.post('/pay', function(req, res) {
     var office = req.body.office;
     var price = req.body.price;
     var store = req.body.store;
-
-    console.log(coins);
-    console.log(product);
-    console.log(office);
-    console.log(price);
+    var i = 0;
+    var a = 0;
 
     //Cheking the validation of the coins
-    for (var i = 0; i < coins.length; i++){
-        var e = 0;
-        var invalidcoinfound = false;
-        console.log('estoy dentro del for');
-        var coin = coins[i];
-        console.log('moneda: ',coin);
-        var signedId = coin.ID_signed;
-        console.log('ID firmado: ',signedId);
-        //Aqui debemos mirar si el signed id es correcto
+    var areCoinsValid = function (callback) {
+        coins.forEach(function (coin) {
+            var signedId = coin.ID_signed;
+            //Aqui debemos mirar si el signed id es correcto
 
 
 
-        //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
-        var query = {idsigned: signedId};
-        Coins.findOne(query, function (err, foundcoin) {
-            if(foundcoin){
-                i = -1;
-                res.status(400).send('Invalid coins found');
-            }
-            else{
-                console.log('coinsarevalid');
-            }
-        });
-        if (i = -1){
-            break;
-        }
-    }
-    //We add the coins to the blacklist if this are valid
-    if (i = price-1) {
-        console.log('i value:', i);
-        for (var a = 0; coins.length; a++) {
-            var addcoin = coins[i];
-            console.log('coin toadd', addcoin);
-            Coins.create({
-                id: addcoin.ID,
-                idsigned: addcoin.ID_signed,
-                amount: addcoin.amount,
-                issuer: addcoin.issuer,
-                issuedate: addcoin.issue_date,
-                urlcheck: addcoin.URLcheck,
-                urlcert: addcoin.URLcert
-            },function (err, coin) {
-                if(coin){
-                    console.log('coin added to the list');
-                }else{
-                    console.log("Error adding")
+            //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
+            var query = {idsigned: signedId};
+            Coins.findOne(query, function (err, foundcoin) {
+                if(foundcoin){
+                    i ++;
+                    a = 1;
+                    console.log('coins are invalid');
+                    if (i == price && a == 1) {
+                        console.log('coins are invalid if dentro a !=0');
+                        callback(false);
+                    }
+                }
+                else{
+                    i ++;
+                    console.log('coinsarevalid', i);
+                    if (i == price && a == 0){
+                        console.log('estoy en el if i',i);
+                        callback(true);
+                    }
+                    if (i == price && a == 1) {
+                        console.log('coins are invalid if dentro a !=0');
+                        callback(false);
+                    }
                 }
             });
-        }
-    }
-    else{
-        res.status(400).send('Invalid coins found');
-    }
+        });
+    };
 
-    res.send('success');
+    //We add the coins to the blacklist if this are valid
+    var addToList = function (valid) {
+        if (valid == true) {
+            console.log('estoy en la function callabck');
+            console.log('longitud de coins', coins.length);
+            var z = 0;
+            coins.forEach(function (addcoin) {
+                console.log('coin toadd', addcoin);
+                Coins.create({
+                    id: addcoin.ID,
+                    idsigned: addcoin.ID_signed,
+                    amount: addcoin.amount,
+                    issuer: addcoin.issuer,
+                    issuedate: addcoin.issue_date,
+                    urlcheck: addcoin.URLcheck,
+                    urlcert: addcoin.URLcert
+                }, function (err, coin) {
+                    if (coin) {
+                        z++;
+                        console.log('coin added to the list', z);
+                        if (z == price){
+                            //We make the posst petition to the e-comerç
+                            var ecommercejson = {
+                                productname: product,
+                                price: price,
+                                store: store,
+                                office: office
+                            };
+                            request.post('http://localhost:3001/transaction',{json:ecommercejson}, function (error, response, body) {
+                                    console.log('body',body);
+                                   res.send(body);
+                                }
+                            );
+                        }
+                    } else {
+                        console.log("Error adding")
+                    }
+                });
+            });
+        }if (valid == false){
+            res.status(400).send('invalid coins');
+        }
+    };
+
+    //Executing the function to validate and add the coins to the list
+    areCoinsValid(addToList);
+
 });
 
 

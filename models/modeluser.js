@@ -17,7 +17,8 @@ var UserSchema = mongoose.Schema({
     coins: [{}],
     kcoin: {
         type: String
-    }
+    },
+    transactions: [{}]
 });
 
 var User = module.exports = mongoose.model('User', UserSchema);
