@@ -156,7 +156,6 @@ router.post('/pay', function(req, res) {
                                 office: office
                             };
                             request.post('http://localhost:3001/transaction',{json:ecommercejson}, function (error, response, body) {
-                                    console.log('body',body);
                                    res.send(body);
                                 }
                             );

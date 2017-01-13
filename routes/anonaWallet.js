@@ -135,7 +135,7 @@ router.post('/addtransaction/:id', function(req, res) {
                 }
                 if (user){
                     console.log('user deleting coins', user);
-                    res .send(user);
+                    res .send('transaction complete');
                 }
             });
         }
