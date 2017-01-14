@@ -1,0 +1,15 @@
+<div ng-controller="packagectrl">
+    <h2>ANONA Package System</h2>
+    <br>
+    <div class="text-center">
+        <img  src="../img/anona.png" height="200px" width="200px">
+    </div>
+    <br>
+    <div>
+        <qr-scanner width="400" height="300" ng-success="onSuccess(data)" ng-error="onError(error)" class="ng-isolate-scope">
+            <video style="-moz-transform:rotateY(-180deg);-webkit-transform:rotateY(-180deg);transform:rotateY(-180deg);" width="400" height="300"></video><canvas id="qr-canvas" width="400" height="300" style="display:none;"></canvas></qr-scanner>
+    </div>
+    <p>{{codeid}}</p>
+    <div id="reader" style="width:300px;height:250px"></div>
+
+</div>

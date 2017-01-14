@@ -7,6 +7,9 @@ var CryptoJS = require('crypto-js');
 var Coins = require('../models/modelcoins');
 var request = require('request');
 
+var PUBLICKEY = rsa.publicKeycoins();
+var PUBLICKEY_E = PUBLICKEY.e;
+var PUBLICKEY_N = PUBLICKEY.n;
 
 router.get('/bankcertificate', function(req, res, next) {
 
@@ -25,6 +28,26 @@ router.get('/e-coincertificate', function(req, res, next) {
 
 function signPrivateKey (data,d,n){
     return data.powm(d,n);
+}
+
+function convertToHex(str) {
+    var hex = '';
+    for (var i = 0; i < str.length; i++) {
+        hex += '' + str.charCodeAt(i).toString(16);
+    }
+    return hex;
+}
+
+function hexToAscii(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+}
+
+function checkSignature (signed,e,n){
+    return signed.powm(e,n);
 }
 
 //Se llama desde terminal para emitir moneda
@@ -95,35 +118,54 @@ router.post('/pay', function(req, res) {
     var areCoinsValid = function (callback) {
         coins.forEach(function (coin) {
             var signedId = coin.ID_signed;
+            var id = coin.ID;
             //Aqui debemos mirar si el signed id es correcto
+            var signedIdInt = bignum(signedId, 16);
+            console.log('signedidint', signedIdInt);
+            console.log('PUBLICKEY_E', PUBLICKEY_E);
+            console.log('PUBLICKEY_N', PUBLICKEY_N);
+            var checkSignature = signedIdInt.powm(PUBLICKEY_E, PUBLICKEY_N)  //checkSignature(signedIdInt,PUBLICKEY_E,PUBLICKEY_N);
+            console.log('checkSignature', checkSignature);
+            var checkHex = checkSignature.toString(16);
+            console.log('checkHex', checkHex);
+            var verify = hexToAscii(checkHex);
+            console.log('verify', verify);
+            console.log('CoinID', id);
 
-
-
-            //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
-            var query = {idsigned: signedId};
-            Coins.findOne(query, function (err, foundcoin) {
-                if(foundcoin){
-                    i ++;
-                    a = 1;
-                    console.log('coins are invalid');
-                    if (i == price && a == 1) {
-                        console.log('coins are invalid if dentro a !=0');
-                        callback(false);
+            if (verify == id){
+                //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
+                var query = {idsigned: signedId};
+                Coins.findOne(query, function (err, foundcoin) {
+                    if(foundcoin){
+                        i ++;
+                        a = 1;
+                        console.log('coins are invalid');
+                        if (i == price && a == 1) {
+                            console.log('coins are invalid if dentro a !=0');
+                            callback(false);
+                        }
                     }
+                    else{
+                        i ++;
+                        console.log('coinsarevalid', i);
+                        if (i == price && a == 0){
+                            console.log('estoy en el if i',i);
+                            callback(true);
+                        }
+                        if (i == price && a == 1) {
+                            console.log('coins are invalid if dentro a !=0');
+                            callback(false);
+                        }
+                    }
+                });
+            }else{
+                i ++;
+                a = 1;
+                if (i == price && a == 1) {
+                    console.log('coins are invalid if dentro a !=0');
+                    callback(false);
                 }
-                else{
-                    i ++;
-                    console.log('coinsarevalid', i);
-                    if (i == price && a == 0){
-                        console.log('estoy en el if i',i);
-                        callback(true);
-                    }
-                    if (i == price && a == 1) {
-                        console.log('coins are invalid if dentro a !=0');
-                        callback(false);
-                    }
-                }
-            });
+            }
         });
     };
 
@@ -131,10 +173,8 @@ router.post('/pay', function(req, res) {
     var addToList = function (valid) {
         if (valid == true) {
             console.log('estoy en la function callabck');
-            console.log('longitud de coins', coins.length);
             var z = 0;
             coins.forEach(function (addcoin) {
-                console.log('coin toadd', addcoin);
                 Coins.create({
                     id: addcoin.ID,
                     idsigned: addcoin.ID_signed,
@@ -148,7 +188,7 @@ router.post('/pay', function(req, res) {
                         z++;
                         console.log('coin added to the list', z);
                         if (z == price){
-                            //We make the posst petition to the e-comerç
+                            //We make the post petition to the e-comerce
                             var ecommercejson = {
                                 productname: product,
                                 price: price,

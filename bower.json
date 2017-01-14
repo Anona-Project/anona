@@ -22,6 +22,7 @@
     "angular-bootstrap": "^2.2.0",
     "angular.uuid2": "angular-uuid2#*",
     "big-integer": "^1.6.17",
-    "angular-qrcode": "monospaced/angular-qrcode#^6.2.1"
+    "angular-qrcode": "monospaced/angular-qrcode#^6.2.1",
+    "angular-qr-scanner": "^0.1.0"
   }
 }

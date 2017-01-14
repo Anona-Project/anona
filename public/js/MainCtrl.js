@@ -12,5 +12,12 @@ MainCtrl.config(['$routeProvider', function($routeProvider){
         })
         .otherwise({
             redirectTo: '/index'
+        })
+    .when('/package', {
+        templateUrl: './views/package.html',
+        controller: 'packagectrl'
+    })
+        .otherwise({
+            redirectTo: '/index'
         });
 }]);
