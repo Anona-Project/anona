@@ -195,8 +195,10 @@ router.post('/pay', function(req, res) {
                                 store: store,
                                 office: office
                             };
+                            //Aqui hacemos la peticion con el ecomerce le mandamos el json ecommercejson y recibimos la respuesta
                             request.post('http://localhost:3001/transaction',{json:ecommercejson}, function (error, response, body) {
-                                   res.send(body);
+                                //Recibimos la respuesta del ecomerce en body y la mandamos la app como res del /pay
+                                res.send(body);
                                 }
                             );
                         }
