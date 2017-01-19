@@ -77,12 +77,6 @@ router.post('/issue', function(req, res, next) {
 
 });
 
-router.get('/makepayment', function(req, res, next) {
-    //gets the coins from the user App to pay, with the info of the transaction
-    //check if the signature is correct in each of them
-    //check if each coin is valid. If it is, include it in the 'SPENT COINS LIST' AND MAKE THE TRANSACTION TO THE E-COMMERCE
-
-});
 
 /* POST a Coin to Database */
 router.post('/coin/', function(req, res) {
@@ -104,6 +98,10 @@ router.post('/coin/', function(req, res) {
 });
 
 /*Checking the coins in the blacklist and payment*/
+//gets the coins from the user App to pay, with the info of the transaction
+//check if the signature is correct in each of them
+//check if each coin is valid. If it is, include it in the 'SPENT COINS LIST' AND MAKE THE TRANSACTION TO THE E-COMMERCE
+
 router.post('/pay', function(req, res) {
     //Geting de request data
     var coins = req.body.coins;
@@ -124,7 +122,7 @@ router.post('/pay', function(req, res) {
             console.log('signedidint', signedIdInt);
             console.log('PUBLICKEY_E', PUBLICKEY_E);
             console.log('PUBLICKEY_N', PUBLICKEY_N);
-            var checkSignature = signedIdInt.powm(PUBLICKEY_E, PUBLICKEY_N)  //checkSignature(signedIdInt,PUBLICKEY_E,PUBLICKEY_N);
+            var checkSignature = signedIdInt.powm(PUBLICKEY_E, PUBLICKEY_N);  //checkSignature(signedIdInt,PUBLICKEY_E,PUBLICKEY_N);
             console.log('checkSignature', checkSignature);
             var checkHex = checkSignature.toString(16);
             console.log('checkHex', checkHex);
@@ -133,7 +131,7 @@ router.post('/pay', function(req, res) {
             console.log('CoinID', id);
 
             if (verify == id){
-                //Una vez sabemos que el signed ID es correcto en todas las monedas comprovamos si estan en la blacklist
+                //Una vez sabemos que el signed ID es correcto en todas las monedas comprobamos si estan en la blacklist
                 var query = {idsigned: signedId};
                 Coins.findOne(query, function (err, foundcoin) {
                     if(foundcoin){
@@ -195,12 +193,21 @@ router.post('/pay', function(req, res) {
                                 store: store,
                                 office: office
                             };
+
+
                             //Aqui hacemos la peticion con el ecomerce le mandamos el json ecommercejson y recibimos la respuesta
                             request.post('http://localhost:3001/transaction',{json:ecommercejson}, function (error, response, body) {
+
+
                                 //Recibimos la respuesta del ecomerce en body y la mandamos la app como res del /pay
                                 res.send(body);
                                 }
                             );
+
+
+
+
+
                         }
                     } else {
                         console.log("Error adding")
