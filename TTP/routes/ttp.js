@@ -36,11 +36,8 @@ router.post('/ttp', function(req, res) {
     console.log(req.body.cert_e);
 
     var pO = bignum(proofOrigin,16);
-    var pk_n_BG = bignum(pubk_A_n,16);
-    var pk_e_BG = bignum(pubk_A_e,16);
-    console.log('E y N: '+pk_e_BG);
-    console.log(pk_n_BG);
-    var decryptSignature = checkSignature(pO,pk_e_BG,pk_n_BG);
+
+    var decryptSignature = checkSignature(pO,pubk_A_e,pubk_A_n);
     console.log(decryptSignature);
     var hashFromServer = decryptSignature.toString(16);
     console.log('PROOF SERVER: '+hashFromServer);

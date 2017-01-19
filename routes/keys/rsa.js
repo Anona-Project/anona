@@ -5,6 +5,7 @@ var keys = require('./bank');
 var bignum = require('bignum');
 var coinkeys = require('./coins');
 
+
 var rsa ={
 
     publicKeybank: function() {
@@ -12,6 +13,7 @@ var rsa ={
 
     },
     privateKeybank: function() {
+        return keys.privateKey.d;
 
     },
     publicKeycoins: function() {
